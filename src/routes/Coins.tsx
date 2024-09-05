@@ -1,47 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-
-const ContainerEl = styled.div`
-    padding: 0 20px;
-    max-width: 480px;
-    margin: 0 auto;
-`;
-const HeaderEl = styled.header`
-    height: 10vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
-const CoinListEl = styled.ul``;
-
-const CoinEl = styled.li`
-    background-color: white;
-    color: ${(props) => props.theme.bgColor};
-    border-radius: 20px;
-    margin-bottom: 10px;
-    &:hover {
-        a {
-            color: ${(props) => props.theme.accentColor};
-        }
-    }
-    a {
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        transition: color 0.3s ease-in;
-    }
-`;
-
-const TitleEL = styled.h1`
-    font-size: 48px;
-    color: ${(props) => props.theme.accentColor};
-`;
-
-const LoaderEl = styled.div`
-    text-align: center;
-`;
+import {
+    CoinEl,
+    CoinListEl,
+    ContainerEl,
+    HeaderEl,
+    ImgEl,
+    LoaderEl,
+    TitleEl,
+} from "../style/CoinStyle";
 
 interface CoinInterface {
     id: string;
@@ -69,7 +36,7 @@ export default function Coins() {
     return (
         <ContainerEl>
             <HeaderEl>
-                <TitleEL>COIN</TitleEL>
+                <TitleEl>COIN</TitleEl>
             </HeaderEl>
             {loading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>
@@ -77,7 +44,16 @@ export default function Coins() {
                 <CoinListEl>
                     {coins.map((coin) => (
                         <CoinEl key={coin.id}>
-                            <Link to={`/${coin.id}`}>
+                            <Link
+                                to={{
+                                    pathname: `/${coin.id}`,
+                                    state: { name: coin.name },
+                                }}
+                            >
+                                <ImgEl
+                                    src={`https://static.coinpaprika.com/coin/${coin.id}/logo.png`}
+                                    alt={coin.name}
+                                />
                                 <span>{coin.name}</span>
                                 <span className="material-symbols-outlined">
                                     keyboard_arrow_right
