@@ -17,11 +17,11 @@ import {
     TabsEl,
     TabEl,
 } from "../style/CoinStyle";
-import { useEffect, useState } from "react";
 import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinPrice } from "../api";
+import { Helmet } from "react-helmet";
 
 interface IRouteParams {
     coinId: string;
@@ -100,8 +100,18 @@ export default function Coin() {
         ["info", coinId],
         () => fetchCoinInfo(coinId)
     );
+    //세번째 인자: 데이터를 다시 불러올 시간초 지정 가능
     const { isLoading: tickersLoading, data: tickersData } =
-        useQuery<IPriceData>(["tickers", coinId], () => fetchCoinPrice(coinId));
+        useQuery<IPriceData>(
+            [
+                "tickers",
+                coinId,
+                {
+                    refetchInterval: 5000,
+                },
+            ],
+            () => fetchCoinPrice(coinId)
+        );
 
     const priceMatch = useRouteMatch("/:coinId/price");
     const chartMatch = useRouteMatch("/:coinId/chart");
@@ -113,6 +123,22 @@ export default function Coin() {
 
     return (
         <ContainerEl>
+            {/* document head */}
+            <Helmet>
+                <title>
+                    {state?.name
+                        ? state.name
+                        : loading
+                        ? "Loading..."
+                        : infoData?.name}
+                </title>
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href={`https://static.coinpaprika.com/coin/${coinId}/logo.png`}
+                    sizes="16x16"
+                />
+            </Helmet>
             <HeaderEl>
                 <TitleEl>
                     {state?.name
@@ -136,8 +162,10 @@ export default function Coin() {
                             <span>${infoData?.symbol}</span>
                         </OverviewItemEl>
                         <OverviewItemEl>
-                            <span>Open Source:</span>
-                            <span>{infoData?.open_source ? "Yes" : "No"}</span>
+                            <span>Price:</span>
+                            <span>
+                                ${tickersData?.quotes.USD.price.toFixed(3)}
+                            </span>
                         </OverviewItemEl>
                     </OverviewEl>
                     <DescriptionEl>{infoData?.description}</DescriptionEl>
@@ -170,7 +198,7 @@ export default function Coin() {
                             <Price />
                         </Route>
                         <Route path={`/:coinId/chart`}>
-                            <Chart />
+                            <Chart coinId={coinId} />
                         </Route>
                     </Switch>
                 </>

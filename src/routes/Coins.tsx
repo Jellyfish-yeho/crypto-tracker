@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
     CoinEl,
@@ -11,6 +10,7 @@ import {
 } from "../style/CoinStyle";
 import { useQuery } from "react-query";
 import { fetchCoins } from "../api";
+import { Helmet } from "react-helmet";
 
 interface ICoin {
     id: string;
@@ -29,6 +29,10 @@ export default function Coins() {
 
     return (
         <ContainerEl>
+            {/* document head */}
+            <Helmet>
+                <title>COIN</title>
+            </Helmet>
             <HeaderEl>
                 <TitleEl>COIN</TitleEl>
             </HeaderEl>
@@ -41,7 +45,9 @@ export default function Coins() {
                             <Link
                                 to={{
                                     pathname: `/${coin.id}`,
-                                    state: { name: coin.name },
+                                    state: {
+                                        name: coin.name,
+                                    },
                                 }}
                             >
                                 <ImgEl

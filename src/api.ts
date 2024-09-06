@@ -18,3 +18,11 @@ export function fetchCoinPrice(coinId: string) {
         response.json()
     );
 }
+//chart
+export function fetchCoinHistory(coinId: string) {
+    // const endDate= Math.floor(Date.now() / 1000); //오늘
+    // const startDate = endDate - 60*60*24*7 //1주일전
+    return fetch(
+        `https://ohlcv-api.nomadcoders.workers.dev?coinId=${coinId}`
+    ).then((response) => response.json());
+}
