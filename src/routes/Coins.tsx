@@ -3,10 +3,8 @@ import {
     CoinEl,
     CoinListEl,
     ContainerEl,
-    HeaderEl,
     ImgEl,
     LoaderEl,
-    TitleEl,
 } from "../style/CoinStyle";
 import { useQuery } from "react-query";
 import { fetchCoins } from "../api";
@@ -23,11 +21,7 @@ interface ICoin {
     type: string;
 }
 
-interface ICoinrops {
-    toggleDark: () => void;
-}
-
-export default function Coins({ toggleDark }: ICoinrops) {
+export default function Coins() {
     //useQuery(고유 키값, fetcher 함수)
     //데이터를 캐시에 저장해두기 때문에, 뒤로가기 해도 로딩이 발생하지 않음
     const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
@@ -38,7 +32,7 @@ export default function Coins({ toggleDark }: ICoinrops) {
             <Helmet>
                 <title>COIN</title>
             </Helmet>
-            <Header pageTitle="💰COIN💰" toggleDark={toggleDark} />
+            <Header pageTitle="💰COIN💰" />
             {isLoading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>
             ) : (

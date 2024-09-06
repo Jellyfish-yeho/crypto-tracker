@@ -85,11 +85,7 @@ interface IPriceData {
     };
 }
 
-interface ICoinrops {
-    toggleDark: () => void;
-}
-
-export default function Coin({ toggleDark }: ICoinrops) {
+export default function Coin() {
     /*
         name 설정하기
         1. 홈 화면에서 접속한 경우: api 요청할 필요 없이 목록 화면에서 바로 name 가져옴. = useLocation > state (Coins에서 Link에 넣은 값)
@@ -150,7 +146,6 @@ export default function Coin({ toggleDark }: ICoinrops) {
                         ? "Loading..."
                         : infoData?.name || ""
                 }
-                toggleDark={toggleDark}
             />
             {loading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>

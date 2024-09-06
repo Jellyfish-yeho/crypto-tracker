@@ -1,6 +1,8 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 interface IChartProps {
     coinId: string;
@@ -17,6 +19,7 @@ interface IHistory {
 }
 
 export default function Chart({ coinId }: IChartProps) {
+    const isDark = useRecoilValue(isDarkAtom);
     /*
         chart 정보 표시를 위해 coinId를 가져오는 방법
         1. useParams : router에서 가져오기
@@ -60,7 +63,7 @@ export default function Chart({ coinId }: IChartProps) {
                     ]}
                     options={{
                         theme: {
-                            mode: "dark",
+                            mode: isDark ? "dark" : "light",
                         },
                         chart: {
                             height: 300,

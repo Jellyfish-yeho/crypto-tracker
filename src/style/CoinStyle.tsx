@@ -101,7 +101,8 @@ const InfoContainerEl = styled.div<IColorProp>`
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.bgColor};
+    border: 1px solid ${(props) => props.theme.textColor};
     border-radius: 10px;
     margin-bottom: 5px;
     h4 {
@@ -111,15 +112,31 @@ const InfoContainerEl = styled.div<IColorProp>`
         color: ${(props) => (props.colorData === 1 ? "#0984e3" : "#e84393")};
     }
 `;
-const ToggleEl = styled.div`
+
+const ToggleContainerEl = styled.div`
     display: flex;
     justify-content: flex-end;
-    button {
-        width: 120px;
-        border-radius: 5px;
-        background-color: ${(props) => props.theme.bgColor};
-        border: 1px solid ${(props) => props.theme.textColor};
-        color: 1px solid ${(props) => props.theme.textColor};
+    margin: 10px 0;
+`;
+interface IThemeProp {
+    isDark: boolean;
+}
+const ToggleEl = styled.button<IThemeProp>`
+    position: relative;
+    border-radius: 5px;
+    background-color: ${(props) => props.theme.bgColor};
+    border: 1px solid ${(props) => props.theme.textColor};
+    color: ${(props) => props.theme.textColor};
+    padding: 5px 25px 5px 10px;
+    &::after {
+        position: absolute;
+        content: "${(props) => (props.isDark ? "🌚" : "🌞")}";
+        top: 41%;
+        transform: translateY(-50%);
+        right: 8px;
+        width: 16px;
+        height: 16px;
+        z-index: 1;
     }
 `;
 export {
@@ -137,5 +154,6 @@ export {
     TitleEl,
     IconEl,
     InfoContainerEl,
+    ToggleContainerEl,
     ToggleEl,
 };

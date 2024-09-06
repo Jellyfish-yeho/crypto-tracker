@@ -1,12 +1,22 @@
 import { useHistory } from "react-router-dom";
-import { IconEl, HeaderEl, TitleEl, ToggleEl } from "../style/CoinStyle";
+import {
+    IconEl,
+    HeaderEl,
+    TitleEl,
+    ToggleEl,
+    ToggleContainerEl,
+} from "../style/CoinStyle";
+import { isDarkAtom } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface IHeaderProps {
     pageTitle: string;
-    toggleDark: () => void;
 }
 
-const Header: React.FC<IHeaderProps> = ({ pageTitle, toggleDark }) => {
+const Header: React.FC<IHeaderProps> = ({ pageTitle }) => {
+    const isDark = useRecoilValue(isDarkAtom);
+    const setDarkAtom = useSetRecoilState(isDarkAtom);
+    const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
     const history = useHistory();
     const handleBackClick = () => {
         history.goBack();
@@ -23,7 +33,11 @@ const Header: React.FC<IHeaderProps> = ({ pageTitle, toggleDark }) => {
     };
     return (
         <>
-            <ToggleEl onClick={toggleDark}>Mode🌞🌚</ToggleEl>
+            <ToggleContainerEl>
+                <ToggleEl isDark={isDark} onClick={toggleDarkAtom}>
+                    Mode
+                </ToggleEl>
+            </ToggleContainerEl>
             <HeaderEl>
                 <IconEl onClick={handleBackClick}>
                     <span className="material-symbols-outlined">
