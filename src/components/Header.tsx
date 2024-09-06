@@ -21,15 +21,8 @@ const Header: React.FC<IHeaderProps> = ({ pageTitle }) => {
     const handleBackClick = () => {
         history.goBack();
     };
-    const handleCopyUrl = () => {
-        navigator.clipboard
-            .writeText(window.location.href)
-            .then(() => {
-                alert("Link Copied!");
-            })
-            .catch((err) => {
-                console.log("Failed to copy link: ", err);
-            });
+    const handleHomeClick = () => {
+        history.push("/");
     };
     return (
         <>
@@ -45,10 +38,8 @@ const Header: React.FC<IHeaderProps> = ({ pageTitle }) => {
                     </span>
                 </IconEl>
                 <TitleEl>{pageTitle}</TitleEl>
-                <IconEl onClick={handleCopyUrl}>
-                    <span className="material-symbols-outlined">
-                        content_copy
-                    </span>
+                <IconEl onClick={handleHomeClick}>
+                    <span className="material-symbols-outlined">home</span>
                 </IconEl>
             </HeaderEl>
         </>
