@@ -1,30 +1,185 @@
-import { useLocation, useParams } from "react-router-dom";
-import { ContainerEl, HeaderEl, LoaderEl, TitleEl } from "../style/CoinStyle";
-import { useState } from "react";
+import {
+    Link,
+    Route,
+    Switch,
+    useLocation,
+    useParams,
+    useRouteMatch,
+} from "react-router-dom";
+import {
+    ContainerEl,
+    HeaderEl,
+    LoaderEl,
+    OverviewEl,
+    TitleEl,
+    OverviewItemEl,
+    DescriptionEl,
+    TabsEl,
+    TabEl,
+} from "../style/CoinStyle";
+import { useEffect, useState } from "react";
+import Price from "./Price";
+import Chart from "./Chart";
 
-interface RouteParamsI {
+interface IRouteParams {
     coinId: string;
 }
-
-interface RouteStateI {
+interface IRouteState {
     name: string;
 }
 
-export default function Coin() {
-    //
-    const { coinId } = useParams<RouteParamsI>();
-    const [loading, setLoading] = useState(true);
+//array의 경우 object로 표현되며, 각각을 interface로 만들어 내부 요소를 설명해 줘야 함.
+interface IInfoData {
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    is_new: boolean;
+    is_active: boolean;
+    type: string;
+    logo: string;
+    description: string;
+    message: string;
+    open_source: boolean;
+    started_at: string;
+    development_status: string;
+    hardware_wallet: boolean;
+    proof_type: string;
+    org_structure: string;
+    hash_algorithm: string;
+    first_data_at: string;
+    last_data_at: string;
+}
 
-    //API 요청할 필요 없이, 목록 화면에서 바로 name을 가져온다.
-    //하지만 바로 링크를 통해 접속한 경우 state가 만들어지지 않아서 에러가 나므로 방어가 필요
-    const { state } = useLocation<RouteStateI>(); //Link 에 보낸 state값도 같이 들어옴
+interface IPriceData {
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    total_supply: number;
+    max_supply: number;
+    beta_value: number;
+    first_data_at: string;
+    last_updated: string;
+    quotes: {
+        USD: {
+            ath_date: string;
+            ath_price: number;
+            market_cap: number;
+            market_cap_change_24h: number;
+            percent_change_1h: number;
+            percent_change_1y: number;
+            percent_change_6h: number;
+            percent_change_7d: number;
+            percent_change_12h: number;
+            percent_change_15m: number;
+            percent_change_24h: number;
+            percent_change_30d: number;
+            percent_change_30m: number;
+            percent_from_price_ath: number;
+            price: number;
+            volume_24h: number;
+            volume_24h_change_24h: number;
+        };
+    };
+}
+
+export default function Coin() {
+    /*
+        name 설정하기
+        1. 홈 화면에서 접속한 경우: api 요청할 필요 없이 목록 화면에서 바로 name 가져옴. = useLocation > state (Coins에서 Link에 넣은 값)
+        2. 바로 링크를 통해 접속한 경우: state가 없기 때문에 api로 가져옴. 
+    */
+    const [loading, setLoading] = useState(true);
+    const { coinId } = useParams<IRouteParams>();
+    const { state } = useLocation<IRouteState>(); //Link 에 보낸 state값도 같이 들어옴
+
+    const [info, setInfo] = useState<IInfoData>();
+    const [priceInfo, setPriceInfo] = useState<IPriceData>();
+
+    const priceMatch = useRouteMatch("/:coinId/price");
+    const chartMatch = useRouteMatch("/:coinId/chart");
+
+    useEffect(() => {
+        (async () => {
+            //괄호 사용하여 1줄로 처리 가능
+            const infoData = await (
+                await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+            ).json();
+            const priceData = await (
+                await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+            ).json();
+            setInfo(infoData);
+            setPriceInfo(priceData);
+            setLoading(false);
+        })();
+    }, [coinId]); //hook 안에서 사용한 것에 대해서는 dependency를 넣어야 한다.
+    //하지만 우리의 coinId는 url에 있기 때문에 절대 변하지 않고, hook은 1번만 실행될 것임.
 
     return (
         <ContainerEl>
             <HeaderEl>
-                <TitleEl>{state?.name || "Loading..."}</TitleEl>
+                <TitleEl>
+                    {state?.name
+                        ? state.name
+                        : loading
+                        ? "Loading..."
+                        : info?.name}
+                </TitleEl>
             </HeaderEl>
-            {loading ? <LoaderEl>loading...⏱️</LoaderEl> : null}
+            {loading ? (
+                <LoaderEl>loading...⏱️</LoaderEl>
+            ) : (
+                <>
+                    <OverviewEl>
+                        <OverviewItemEl>
+                            <span>Rank:</span>
+                            <span>{info?.rank}</span>
+                        </OverviewItemEl>
+                        <OverviewItemEl>
+                            <span>Symbol:</span>
+                            <span>${info?.symbol}</span>
+                        </OverviewItemEl>
+                        <OverviewItemEl>
+                            <span>Open Source:</span>
+                            <span>{info?.open_source ? "Yes" : "No"}</span>
+                        </OverviewItemEl>
+                    </OverviewEl>
+                    <DescriptionEl>{info?.description}</DescriptionEl>
+                    <OverviewEl>
+                        <OverviewItemEl>
+                            <span>Total Suply:</span>
+                            <span>{priceInfo?.total_supply}</span>
+                        </OverviewItemEl>
+                        <OverviewItemEl>
+                            <span>Max Supply:</span>
+                            <span>{priceInfo?.max_supply}</span>
+                        </OverviewItemEl>
+                    </OverviewEl>
+
+                    <TabsEl>
+                        <TabEl isActive={chartMatch !== null}>
+                            <Link to={`/${coinId}/chart`}>Chart</Link>
+                        </TabEl>
+                        <TabEl isActive={priceMatch !== null}>
+                            <Link to={`/${coinId}/price`}>Price</Link>
+                        </TabEl>
+                    </TabsEl>
+
+                    {/* 
+                        Nested Router 
+                        - 굳이 `${coinId}` 로 가져올 필요 없이 :coinId로 가져오기 가능.
+                    */}
+                    <Switch>
+                        <Route path={`/:coinId/price`}>
+                            <Price />
+                        </Route>
+                        <Route path={`/:coinId/chart`}>
+                            <Chart />
+                        </Route>
+                    </Switch>
+                </>
+            )}
         </ContainerEl>
     );
 }
