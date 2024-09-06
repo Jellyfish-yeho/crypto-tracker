@@ -13,8 +13,9 @@ const HeaderEl = styled.header`
 `;
 const CoinListEl = styled.ul``;
 const CoinEl = styled.li`
-    background-color: white;
-    color: ${(props) => props.theme.bgColor};
+    color: ${(props) => props.theme.textColor};
+    background-color: ${(props) => props.theme.bgColor};
+    border: 1px solid ${(props) => props.theme.textColor};
     border-radius: 20px;
     margin-bottom: 10px;
     &:hover {
@@ -27,6 +28,7 @@ const CoinEl = styled.li`
         align-items: center;
         padding: 20px;
         transition: color 0.3s ease-in;
+        font-weight: 700;
     }
 `;
 const TitleEl = styled.h1`
@@ -46,7 +48,8 @@ const ImgEl = styled.img`
 const OverviewEl = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.bgColor};
+    border: 1px solid ${(props) => props.theme.textColor};
     padding: 10px 20px;
     border-radius: 10px;
 `;
@@ -76,7 +79,8 @@ const TabEl = styled.span<{ isActive: boolean }>`
     text-transform: uppercase;
     font-size: 12px;
     font-weight: 400;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: ${(props) => props.theme.bgColor};
+    border: 1px solid ${(props) => props.theme.textColor};
     padding: 7px 0px;
     border-radius: 10px;
     color: ${(props) =>
@@ -107,6 +111,17 @@ const InfoContainerEl = styled.div<IColorProp>`
         color: ${(props) => (props.colorData === 1 ? "#0984e3" : "#e84393")};
     }
 `;
+const ToggleEl = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    button {
+        width: 120px;
+        border-radius: 5px;
+        background-color: ${(props) => props.theme.bgColor};
+        border: 1px solid ${(props) => props.theme.textColor};
+        color: 1px solid ${(props) => props.theme.textColor};
+    }
+`;
 export {
     ContainerEl,
     CoinEl,
@@ -122,4 +137,5 @@ export {
     TitleEl,
     IconEl,
     InfoContainerEl,
+    ToggleEl,
 };

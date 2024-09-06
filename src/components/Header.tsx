@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { IconEl, HeaderEl, TitleEl } from "../style/CoinStyle";
+import { IconEl, HeaderEl, TitleEl, ToggleEl } from "../style/CoinStyle";
 
 interface IHeaderProps {
     pageTitle: string;
@@ -21,15 +21,21 @@ const Header: React.FC<IHeaderProps> = ({ pageTitle }) => {
             });
     };
     return (
-        <HeaderEl>
-            <IconEl onClick={handleBackClick}>
-                <span className="material-symbols-outlined">arrow_back</span>
-            </IconEl>
-            <TitleEl>{pageTitle}</TitleEl>
-            <IconEl onClick={handleCopyUrl}>
-                <span className="material-symbols-outlined">content_copy</span>
-            </IconEl>
-        </HeaderEl>
+        <>
+            <HeaderEl>
+                <IconEl onClick={handleBackClick}>
+                    <span className="material-symbols-outlined">
+                        arrow_back
+                    </span>
+                </IconEl>
+                <TitleEl>{pageTitle}</TitleEl>
+                <IconEl onClick={handleCopyUrl}>
+                    <span className="material-symbols-outlined">
+                        content_copy
+                    </span>
+                </IconEl>
+            </HeaderEl>
+        </>
     );
 };
 
