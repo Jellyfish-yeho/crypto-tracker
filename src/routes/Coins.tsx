@@ -31,6 +31,12 @@ export default function Coins() {
             {/* document head */}
             <Helmet>
                 <title>COIN</title>
+                <link
+                    rel="icon"
+                    type="image/png"
+                    href={`${process.env.PUBLIC_URL}/icon.jpg`}
+                    sizes="16x16"
+                />
             </Helmet>
             <Header pageTitle="💰COIN💰" />
             {isLoading ? (
