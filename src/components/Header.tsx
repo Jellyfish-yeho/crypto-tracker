@@ -3,9 +3,10 @@ import { IconEl, HeaderEl, TitleEl, ToggleEl } from "../style/CoinStyle";
 
 interface IHeaderProps {
     pageTitle: string;
+    toggleDark: () => void;
 }
 
-const Header: React.FC<IHeaderProps> = ({ pageTitle }) => {
+const Header: React.FC<IHeaderProps> = ({ pageTitle, toggleDark }) => {
     const history = useHistory();
     const handleBackClick = () => {
         history.goBack();
@@ -22,6 +23,7 @@ const Header: React.FC<IHeaderProps> = ({ pageTitle }) => {
     };
     return (
         <>
+            <ToggleEl onClick={toggleDark}>Mode🌞🌚</ToggleEl>
             <HeaderEl>
                 <IconEl onClick={handleBackClick}>
                     <span className="material-symbols-outlined">

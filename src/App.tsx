@@ -80,9 +80,8 @@ function App() {
     return (
         <>
             <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-                <button onClick={toggleDark}>toggle mode</button>
                 <GlobalStyle />
-                <Router />
+                <Router toggleDark={toggleDark} />
                 {/* react-query cash 볼 수 있는 devtool */}
                 <ReactQueryDevtools initialIsOpen={true} />
             </ThemeProvider>

@@ -23,7 +23,11 @@ interface ICoin {
     type: string;
 }
 
-export default function Coins() {
+interface ICoinrops {
+    toggleDark: () => void;
+}
+
+export default function Coins({ toggleDark }: ICoinrops) {
     //useQuery(고유 키값, fetcher 함수)
     //데이터를 캐시에 저장해두기 때문에, 뒤로가기 해도 로딩이 발생하지 않음
     const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
@@ -34,7 +38,7 @@ export default function Coins() {
             <Helmet>
                 <title>COIN</title>
             </Helmet>
-            <Header pageTitle="💰COIN💰" />
+            <Header pageTitle="💰COIN💰" toggleDark={toggleDark} />
             {isLoading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>
             ) : (
