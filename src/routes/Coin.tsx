@@ -20,6 +20,8 @@ import {
 import { useEffect, useState } from "react";
 import Price from "./Price";
 import Chart from "./Chart";
+import { useQuery } from "react-query";
+import { fetchCoinInfo, fetchCoinPrice } from "../api";
 
 interface IRouteParams {
     coinId: string;
@@ -90,31 +92,24 @@ export default function Coin() {
         1. 홈 화면에서 접속한 경우: api 요청할 필요 없이 목록 화면에서 바로 name 가져옴. = useLocation > state (Coins에서 Link에 넣은 값)
         2. 바로 링크를 통해 접속한 경우: state가 없기 때문에 api로 가져옴. 
     */
-    const [loading, setLoading] = useState(true);
+
     const { coinId } = useParams<IRouteParams>();
     const { state } = useLocation<IRouteState>(); //Link 에 보낸 state값도 같이 들어옴
 
-    const [info, setInfo] = useState<IInfoData>();
-    const [priceInfo, setPriceInfo] = useState<IPriceData>();
+    const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
+        ["info", coinId],
+        () => fetchCoinInfo(coinId)
+    );
+    const { isLoading: tickersLoading, data: tickersData } =
+        useQuery<IPriceData>(["tickers", coinId], () => fetchCoinPrice(coinId));
 
     const priceMatch = useRouteMatch("/:coinId/price");
     const chartMatch = useRouteMatch("/:coinId/chart");
 
-    useEffect(() => {
-        (async () => {
-            //괄호 사용하여 1줄로 처리 가능
-            const infoData = await (
-                await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-            ).json();
-            const priceData = await (
-                await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-            ).json();
-            setInfo(infoData);
-            setPriceInfo(priceData);
-            setLoading(false);
-        })();
-    }, [coinId]); //hook 안에서 사용한 것에 대해서는 dependency를 넣어야 한다.
+    //hook 안에서 사용한 것에 대해서는 dependency를 넣어야 한다.
     //하지만 우리의 coinId는 url에 있기 때문에 절대 변하지 않고, hook은 1번만 실행될 것임.
+
+    const loading = infoLoading || tickersLoading;
 
     return (
         <ContainerEl>
@@ -124,7 +119,7 @@ export default function Coin() {
                         ? state.name
                         : loading
                         ? "Loading..."
-                        : info?.name}
+                        : infoData?.name}
                 </TitleEl>
             </HeaderEl>
             {loading ? (
@@ -134,26 +129,26 @@ export default function Coin() {
                     <OverviewEl>
                         <OverviewItemEl>
                             <span>Rank:</span>
-                            <span>{info?.rank}</span>
+                            <span>{infoData?.rank}</span>
                         </OverviewItemEl>
                         <OverviewItemEl>
                             <span>Symbol:</span>
-                            <span>${info?.symbol}</span>
+                            <span>${infoData?.symbol}</span>
                         </OverviewItemEl>
                         <OverviewItemEl>
                             <span>Open Source:</span>
-                            <span>{info?.open_source ? "Yes" : "No"}</span>
+                            <span>{infoData?.open_source ? "Yes" : "No"}</span>
                         </OverviewItemEl>
                     </OverviewEl>
-                    <DescriptionEl>{info?.description}</DescriptionEl>
+                    <DescriptionEl>{infoData?.description}</DescriptionEl>
                     <OverviewEl>
                         <OverviewItemEl>
                             <span>Total Suply:</span>
-                            <span>{priceInfo?.total_supply}</span>
+                            <span>{tickersData?.total_supply}</span>
                         </OverviewItemEl>
                         <OverviewItemEl>
                             <span>Max Supply:</span>
-                            <span>{priceInfo?.max_supply}</span>
+                            <span>{tickersData?.max_supply}</span>
                         </OverviewItemEl>
                     </OverviewEl>
 

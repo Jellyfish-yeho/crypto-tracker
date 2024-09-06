@@ -9,8 +9,10 @@ import {
     LoaderEl,
     TitleEl,
 } from "../style/CoinStyle";
+import { useQuery } from "react-query";
+import { fetchCoins } from "../api";
 
-interface CoinInterface {
+interface ICoin {
     id: string;
     name: string;
     symbol: string;
@@ -21,28 +23,20 @@ interface CoinInterface {
 }
 
 export default function Coins() {
-    const [coins, setCoins] = useState<CoinInterface[]>([]);
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        (async () => {
-            const response = await fetch(
-                "https://api.coinpaprika.com/v1/coins"
-            );
-            const json = await response.json();
-            setCoins(json.slice(0, 10));
-            setLoading(false);
-        })(); //함수 바로 실행 ()()
-    }, []);
+    //useQuery(고유 키값, fetcher 함수)
+    //데이터를 캐시에 저장해두기 때문에, 뒤로가기 해도 로딩이 발생하지 않음
+    const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+
     return (
         <ContainerEl>
             <HeaderEl>
                 <TitleEl>COIN</TitleEl>
             </HeaderEl>
-            {loading ? (
+            {isLoading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>
             ) : (
                 <CoinListEl>
-                    {coins.map((coin) => (
+                    {data?.slice(0, 100).map((coin) => (
                         <CoinEl key={coin.id}>
                             <Link
                                 to={{
