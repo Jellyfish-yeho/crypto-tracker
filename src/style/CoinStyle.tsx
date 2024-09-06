@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
-export const ContainerEl = styled.div`
+const ContainerEl = styled.div`
     padding: 0 20px;
     max-width: 480px;
     margin: 0 auto;
 `;
-export const HeaderEl = styled.header`
+const HeaderEl = styled.header`
     height: 10vh;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 `;
-export const CoinListEl = styled.ul``;
-export const CoinEl = styled.li`
+const CoinListEl = styled.ul``;
+const CoinEl = styled.li`
     background-color: white;
     color: ${(props) => props.theme.bgColor};
     border-radius: 20px;
@@ -29,27 +29,28 @@ export const CoinEl = styled.li`
         transition: color 0.3s ease-in;
     }
 `;
-export const TitleEl = styled.h1`
+const TitleEl = styled.h1`
     font-size: 48px;
     color: ${(props) => props.theme.accentColor};
 `;
-export const LoaderEl = styled.div`
+
+const LoaderEl = styled.div`
     text-align: center;
 `;
-export const ImgEl = styled.img`
+const ImgEl = styled.img`
     width: 30px;
     height: 30px;
     margin-right: 10px;
 `;
 
-export const OverviewEl = styled.div`
+const OverviewEl = styled.div`
     display: flex;
     justify-content: space-between;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 10px 20px;
     border-radius: 10px;
 `;
-export const OverviewItemEl = styled.div`
+const OverviewItemEl = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,17 +61,17 @@ export const OverviewItemEl = styled.div`
         margin-bottom: 5px;
     }
 `;
-export const DescriptionEl = styled.p`
+const DescriptionEl = styled.p`
     margin: 20px 0px;
 `;
-export const TabsEl = styled.div`
+const TabsEl = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     margin: 25px 0px;
     gap: 10px;
 `;
 
-export const TabEl = styled.span<{ isActive: boolean }>`
+const TabEl = styled.span<{ isActive: boolean }>`
     text-align: center;
     text-transform: uppercase;
     font-size: 12px;
@@ -84,3 +85,41 @@ export const TabEl = styled.span<{ isActive: boolean }>`
         display: block;
     }
 `;
+const IconEl = styled.button`
+    color: ${(props) => props.theme.textColor};
+    cursor: pointer;
+`;
+interface IColorProp {
+    colorData: number;
+}
+const InfoContainerEl = styled.div<IColorProp>`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin-bottom: 5px;
+    h4 {
+        font-weight: 700;
+    }
+    span {
+        color: ${(props) => (props.colorData === 1 ? "#0984e3" : "#e84393")};
+    }
+`;
+export {
+    ContainerEl,
+    CoinEl,
+    CoinListEl,
+    DescriptionEl,
+    HeaderEl,
+    ImgEl,
+    LoaderEl,
+    OverviewEl,
+    OverviewItemEl,
+    TabEl,
+    TabsEl,
+    TitleEl,
+    IconEl,
+    InfoContainerEl,
+};

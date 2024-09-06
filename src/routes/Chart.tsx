@@ -1,7 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
-import moment from "moment";
 
 interface IChartProps {
     coinId: string;
@@ -41,12 +40,22 @@ export default function Chart({ coinId }: IChartProps) {
                 "Loading chart..."
             ) : (
                 <ApexChart
-                    type="line"
+                    type="candlestick"
                     series={[
                         {
                             name: "Price",
                             data:
-                                data?.map((price) => Number(price.close)) || [],
+                                data?.map((price) => {
+                                    return {
+                                        x: price.close,
+                                        y: [
+                                            Number(price.open).toFixed(2),
+                                            Number(price.high).toFixed(2),
+                                            Number(price.low).toFixed(2),
+                                            Number(price.close).toFixed(2),
+                                        ],
+                                    };
+                                }) || [],
                         },
                     ]}
                     options={{
@@ -64,10 +73,6 @@ export default function Chart({ coinId }: IChartProps) {
                         grid: {
                             show: false,
                         },
-                        stroke: {
-                            curve: "smooth",
-                            width: 2,
-                        },
                         xaxis: {
                             labels: {
                                 show: false,
@@ -78,27 +83,16 @@ export default function Chart({ coinId }: IChartProps) {
                             axisBorder: {
                                 show: false,
                             },
-                            type: "datetime",
-                            categories: data?.map((price) =>
-                                moment(new Date(price.time_close)).format(
-                                    "YYYY-MM-DD hh:ss"
-                                )
-                            ),
                         },
                         yaxis: {
                             show: false,
                         },
-                        fill: {
-                            type: "gradient",
-                            gradient: {
-                                gradientToColors: ["#6c5ce7"],
-                                stops: [0, 100],
-                            },
-                        },
-                        colors: ["#fdcb6e"],
-                        tooltip: {
-                            y: {
-                                formatter: (value) => `$ ${value.toFixed(2)}`,
+                        plotOptions: {
+                            candlestick: {
+                                colors: {
+                                    upward: "#e84393",
+                                    downward: "#0984e3",
+                                },
                             },
                         },
                     }}

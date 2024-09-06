@@ -11,6 +11,7 @@ import {
 import { useQuery } from "react-query";
 import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet";
+import Header from "../components/Header";
 
 interface ICoin {
     id: string;
@@ -33,9 +34,7 @@ export default function Coins() {
             <Helmet>
                 <title>COIN</title>
             </Helmet>
-            <HeaderEl>
-                <TitleEl>COIN</TitleEl>
-            </HeaderEl>
+            <Header pageTitle="💰COIN💰" />
             {isLoading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>
             ) : (

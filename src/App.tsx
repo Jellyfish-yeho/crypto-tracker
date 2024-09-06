@@ -65,6 +65,11 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color: inherit;
   }
+  button{
+    outline: none;
+    background: none;
+    border: none;
+  }
 `;
 
 function App() {

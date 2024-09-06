@@ -22,6 +22,7 @@ import Chart from "./Chart";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinPrice } from "../api";
 import { Helmet } from "react-helmet";
+import Header from "../components/Header";
 
 interface IRouteParams {
     coinId: string;
@@ -139,15 +140,15 @@ export default function Coin() {
                     sizes="16x16"
                 />
             </Helmet>
-            <HeaderEl>
-                <TitleEl>
-                    {state?.name
+            <Header
+                pageTitle={
+                    state?.name
                         ? state.name
                         : loading
                         ? "Loading..."
-                        : infoData?.name}
-                </TitleEl>
-            </HeaderEl>
+                        : infoData?.name || ""
+                }
+            />
             {loading ? (
                 <LoaderEl>loading...⏱️</LoaderEl>
             ) : (
@@ -195,7 +196,7 @@ export default function Coin() {
                     */}
                     <Switch>
                         <Route path={`/:coinId/price`}>
-                            <Price />
+                            <Price coinId={coinId} />
                         </Route>
                         <Route path={`/:coinId/chart`}>
                             <Chart coinId={coinId} />
